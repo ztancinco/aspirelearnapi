@@ -1,0 +1,5 @@
+[FORMAT]
+min-public-methods=0
+
+[MASTER]
+ignore=migrations
