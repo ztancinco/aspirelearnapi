@@ -25,7 +25,7 @@ psql -h db -U root -d postgres -tc "SELECT 1 FROM pg_roles WHERE rolname = '$POS
   psql -h db -U root -d postgres -c "CREATE ROLE root WITH LOGIN SUPERUSER CREATEDB CREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1 ENCRYPTED PASSWORD '$POSTGRES_PASSWORD';"
 
 # Delete existing database if it exists
-psql -h db -U root -d postgres -c "DROP DATABASE $POSTGRES_DB;"
+# psql -h db -U root -d postgres -c "DROP DATABASE $POSTGRES_DB;"
 
 # Create the database if it doesn't exist
 echo "Creating database if it doesn't exist..."

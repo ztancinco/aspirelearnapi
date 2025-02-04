@@ -5,12 +5,12 @@ from rest_framework import serializers
 
 class AuthSerializer(serializers.Serializer):
     """
-    Serializer for authenticating users by validating username and password.
+    Serializer for authenticating users by validating email and password.
     """
-    username = serializers.CharField(
+    email = serializers.EmailField(
         max_length=255,
         required=True,
-        help_text="The username of the user."
+        help_text="The email of the user."
     )
     password = serializers.CharField(
         write_only=True,
