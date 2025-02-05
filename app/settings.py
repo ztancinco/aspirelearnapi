@@ -34,6 +34,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'TOKEN_BLACKLISTING': True,
 }
 
 # Application definition
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'app.courses',
     'app.users',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 ]
 

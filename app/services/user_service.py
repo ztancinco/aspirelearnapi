@@ -3,19 +3,19 @@ Service for Users
 """
 
 from django.shortcuts import get_object_or_404
-from ..users.models.dash_user_model import DashUserModel
+from django.contrib.auth.models import User
 from ..users.serializers.user_serializer import UserSerializer
 
 class DashUsersService:
     """
-    Service class for handling user-related operations.
+    Service class for handling user-related operations using Django's built-in User model.
     """
 
     def get_all_users(self):
         """
         Retrieve all users and serialize them.
         """
-        users = DashUserModel.objects.all()  # pylint: disable=no-member
+        users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return serializer.data
 
@@ -26,7 +26,7 @@ class DashUsersService:
         :param user_id: ID of the user to retrieve
         :return: Serialized user data
         """
-        user = get_object_or_404(DashUserModel, id=user_id)
+        user = get_object_or_404(User, id=user_id)
         serializer = UserSerializer(user)
         return serializer.data
 
@@ -50,7 +50,7 @@ class DashUsersService:
         :param data: Dictionary containing updated user data
         :return: Serialized updated user data
         """
-        user = get_object_or_404(DashUserModel, id=user_id)
+        user = get_object_or_404(User, id=user_id)
         serializer = UserSerializer(user, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -62,6 +62,6 @@ class DashUsersService:
 
         :param user_id: ID of the user to delete
         """
-        user = get_object_or_404(DashUserModel, id=user_id)
+        user = get_object_or_404(User, id=user_id)
         user.delete()
         user.save()

@@ -1,5 +1,5 @@
 """
-URL configuration for the Learndash app.
+URL configuration for the AspireLearn api.
 """
 
 import os

@@ -15,8 +15,7 @@ class DashUsersView(APIView):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)  # Initialize the parent class first
-        # Now instantiate the DashUsersService instance
+        super().__init__(**kwargs)
         self.user_service = DashUsersService()
 
     def get(self, _, user_id=None):

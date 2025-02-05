@@ -16,7 +16,7 @@ class AuthLogoutView(APIView):
         """
         POST method to log out the user by invalidating the refresh token.
         """
-        refresh_token = request.data.get('refresh')
+        refresh_token = request.data.get('refresh_token')
 
         if not refresh_token:
             return Response(
