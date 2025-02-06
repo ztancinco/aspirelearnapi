@@ -3,13 +3,13 @@ Serializer for Lessson.
 """
 
 from rest_framework import serializers
-from ..models.lesson_model import LessonsModel
+from ..models.lesson_model import LessonModel
 
-class LessonsSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     """
-    Serializer for the LessonsModel.
+    Serializer for the LessonModel.
 
-    This serializer converts LessonsModel instances into JSON format 
+    This serializer converts LessonModel instances into JSON format 
     and validates incoming data for lesson-related API operations.
     """
 
@@ -17,8 +17,8 @@ class LessonsSerializer(serializers.ModelSerializer):
         """
         Meta class to define the model and fields for serialization.
 
-        Specifies the model being serialized (LessonsModel) and the 
+        Specifies the model being serialized (LessonModel) and the 
         fields to include in the serialized output.
         """
-        model = LessonsModel
-        fields = ['id', 'title', 'content', 'video_url', 'order']
+        model = LessonModel
+        fields = ['id', 'title', 'content', 'video_url', 'order','course']

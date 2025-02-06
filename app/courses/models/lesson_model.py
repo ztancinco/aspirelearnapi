@@ -6,7 +6,7 @@ from django.db import models
 from .course_model import CourseModel
 from ...abstract.soft_delete_model import SoftDeleteModel
 
-class LessonsModel(SoftDeleteModel):
+class LessonModel(SoftDeleteModel):
     """
     Model representing a lesson in a course.
     """
