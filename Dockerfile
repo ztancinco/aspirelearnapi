@@ -24,6 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install linting tools
 RUN pip install pylint autopep8 black ruff
 
+# Install drf_spectacular for Swagger doc generation
+RUN pip install drf-spectacular
+
 # Copy application files
 COPY . .
 
@@ -38,6 +41,9 @@ RUN ruff check app --fix
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
+
+# Generate Swagger/OpenAPI schema
+RUN python manage.py spectacular --file /app/schema.yml
 
 # Expose port 8000
 EXPOSE 8000

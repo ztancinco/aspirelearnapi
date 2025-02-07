@@ -10,6 +10,7 @@ from ..courses.models.quiz_model import QuizModel
 from ..courses.models.question_model import QuestionModel
 from ..courses.serializers.question_serializer import QuestionSerializer
 
+
 class QuestionService:
     """
     Service class for handling Question-related operations.
@@ -50,7 +51,7 @@ class QuestionService:
         quiz: QuizModel = get_object_or_404(QuizModel, id=quiz_id)
 
         # Attach the quiz ID to the question data
-        data['quiz'] = quiz.id
+        data["quiz"] = quiz.id
 
         # Validate and save the question
         serializer: QuestionSerializer = QuestionSerializer(data=data)
@@ -67,7 +68,9 @@ class QuestionService:
         :return: Serialized updated question data.
         """
         question: QuestionModel = get_object_or_404(QuestionModel, id=question_id)
-        serializer: QuestionSerializer = QuestionSerializer(question, data=data, partial=True)
+        serializer: QuestionSerializer = QuestionSerializer(
+            question, data=data, partial=True
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return serializer.data

@@ -17,6 +17,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 load_dotenv()
 logger = logging.getLogger(__name__)
 
+
 class AuthenticationService:
     """
     Service class for handling authentication-related operations.
@@ -27,10 +28,13 @@ class AuthenticationService:
         Initialize the AuthenticationService with routes and excluded routes.
         """
         self.routes: List[str] = self.get_all_routes()
-        self.api_version: str = os.getenv('DJANGO_API_VERSION', 'v1')
+        self.api_version: str = os.getenv("DJANGO_API_VERSION", "v1")
         self.excluded_routes: List[str] = [
-            f'/api/{self.api_version}/auth/login',
-            f'/api/{self.api_version}/auth/logout'
+            f"/api/{self.api_version}/auth/login",
+            f"/api/{self.api_version}/auth/logout",
+            f"/api/{self.api_version}/schema",
+            f"/api/{self.api_version}/docs",
+            f"/api/{self.api_version}/redoc",
         ]
         logger.debug("Initialized AuthenticationService with routes: %s", self.routes)
 
@@ -44,13 +48,12 @@ class AuthenticationService:
             url_patterns = get_resolver().url_patterns
             routes: List[str] = []
 
-            def extract_routes(patterns: List, parent_pattern: str = '') -> None:
+            def extract_routes(patterns: List, parent_pattern: str = "") -> None:
                 for pattern in patterns:
-                    if hasattr(pattern, 'url_patterns'):
+                    if hasattr(pattern, "url_patterns"):
                         # Recursive call for nested URL patterns
                         extract_routes(
-                            pattern.url_patterns,
-                            parent_pattern + str(pattern.pattern)
+                            pattern.url_patterns, parent_pattern + str(pattern.pattern)
                         )
                     else:
                         # Append full pattern to the routes list
@@ -70,17 +73,17 @@ class AuthenticationService:
         :param request: Django HttpRequest object.
         :return: HttpResponseForbidden if authentication fails, otherwise None.
         """
-        if request.path.startswith('/api/') and not any(
+        if request.path.startswith("/api/") and not any(
             request.path.startswith(excluded_route)
             for excluded_route in self.excluded_routes
         ):
             jwt_auth: JWTAuthentication = JWTAuthentication()
-            auth_header: Optional[str] = request.headers.get('Authorization')
+            auth_header: Optional[str] = request.headers.get("Authorization")
 
             if auth_header:
                 try:
-                    prefix, token = auth_header.split(' ')
-                    if prefix == 'Bearer':
+                    prefix, token = auth_header.split(" ")
+                    if prefix == "Bearer":
                         logger.debug("Bearer token found, attempting validation.")
                         validated_token = jwt_auth.get_validated_token(token)
                         request.user = jwt_auth.get_user(validated_token)

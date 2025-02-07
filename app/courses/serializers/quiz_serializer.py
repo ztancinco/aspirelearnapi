@@ -6,18 +6,21 @@ from rest_framework import serializers
 from ..models.quiz_model import QuizModel
 from .question_serializer import QuestionSerializer
 
+
 class QuizSerializer(serializers.ModelSerializer):
     """
     Serializer class for QuizModel.
     """
+
     questions = QuestionSerializer(many=True, read_only=True)
 
     class Meta:
         """
         Meta class to define the model and fields for the QuizSerializer.
         """
+
         model = QuizModel
-        fields = ['id', 'title', 'course', 'questions']
+        fields = ["id", "title", "course", "questions"]
 
     def __str__(self):
         """

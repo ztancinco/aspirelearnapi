@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from ..courses.models.quiz_model import QuizModel
 from ..courses.serializers.quiz_serializer import QuizSerializer
 
+
 class QuizService:
     """
     Service class for handling Quiz-related operations.

@@ -3,11 +3,13 @@ Service for managing lessons.
 
 This is a service class to handle actions related to lessons.
 """
+
 from typing import Dict, Any
 from django.shortcuts import get_object_or_404
 from ..courses.models.lesson_model import LessonModel
 from ..courses.serializers.lesson_serializer import LessonSerializer
 from .utils import handle_video_upload
+
 
 class LessonService:
     """
@@ -21,8 +23,8 @@ class LessonService:
         :param lesson_data: Data for the lesson.
         :return: Serialized lesson data.
         """
-        video_file = lesson_data.get('video', None)
-        lesson_data['video_url'] = handle_video_upload(video_file) if video_file else ''
+        video_file = lesson_data.get("video", None)
+        lesson_data["video_url"] = handle_video_upload(video_file) if video_file else ""
         lesson_serializer = LessonSerializer(data=lesson_data)
         lesson_serializer.is_valid(raise_exception=True)
         lesson_serializer.save()
@@ -39,7 +41,9 @@ class LessonService:
         serializer = LessonSerializer(lesson)
         return serializer.data
 
-    def update_lesson(self, lesson_id: int, lesson_data: Dict[str, Any]) -> Dict[str, Any]:
+    def update_lesson(
+        self, lesson_id: int, lesson_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Update an existing lesson.
 
@@ -48,8 +52,8 @@ class LessonService:
         :return: Serialized updated lesson data.
         """
         lesson = get_object_or_404(LessonModel, id=lesson_id)
-        video_file = lesson_data.get('video', None)
-        lesson_data['video_url'] = handle_video_upload(video_file) if video_file else ''
+        video_file = lesson_data.get("video", None)
+        lesson_data["video_url"] = handle_video_upload(video_file) if video_file else ""
         lesson_serializer = LessonSerializer(lesson, data=lesson_data, partial=True)
         lesson_serializer.is_valid(raise_exception=True)
         lesson_serializer.save()

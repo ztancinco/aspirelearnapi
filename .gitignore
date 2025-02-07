@@ -20,6 +20,16 @@ db.sqlite3
 media/
 staticfiles/
 
+# Ignore migrations except __init__.py
+migrations/**/*
+!migrations/**/__.init__.py
+
+# Swagger schema files
+swagger.yaml
+swagger.json
+openapi.yaml
+openapi.json
+
 # IDEs and editors
 .vscode/
 .idea/

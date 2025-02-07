@@ -5,10 +5,12 @@ This is the model for the category of the course in the application.
 from django.db import models
 from ...abstract.soft_delete_model import SoftDeleteModel
 
+
 class CourseCategoryModel(SoftDeleteModel):
     """
     A model representing a category of the course in the application.
     """
+
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,7 +24,8 @@ class CourseCategoryModel(SoftDeleteModel):
         """
         Meta options for CourseCategoryModel.
         """
-        db_table = 'course_categories'
+
+        db_table = "course_categories"
         indexes = [
-            models.Index(fields=['deleted_at']),
+            models.Index(fields=["deleted_at"]),
         ]

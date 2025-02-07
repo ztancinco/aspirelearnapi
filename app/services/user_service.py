@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.functions import Lower
 from ..users.serializers.user_serializer import UserSerializer
 
+
 class DashUsersService:
     """
     Service class for handling user-related operations using Django's built-in User model.
@@ -21,17 +22,20 @@ class DashUsersService:
 
         :return: A list of serialized user data.
         """
-        users: QuerySet[User] = User.objects.filter(
-            Q(groups__name__iexact='admin') |
-            Q(groups__name__iexact='instructor') |
-            Q(groups__name__iexact='student')
-        ).annotate(
-            lower_group_name=Lower('groups__name')
-        ).filter(
-            Q(lower_group_name='admin') |
-            Q(lower_group_name='instructor') |
-            Q(lower_group_name='student')
-        ).distinct()
+        users: QuerySet[User] = (
+            User.objects.filter(
+                Q(groups__name__iexact="admin")
+                | Q(groups__name__iexact="instructor")
+                | Q(groups__name__iexact="student")
+            )
+            .annotate(lower_group_name=Lower("groups__name"))
+            .filter(
+                Q(lower_group_name="admin")
+                | Q(lower_group_name="instructor")
+                | Q(lower_group_name="student")
+            )
+            .distinct()
+        )
 
         return UserSerializer(users, many=True).data
 
@@ -52,11 +56,11 @@ class DashUsersService:
         :param data: Dictionary containing user data
         :return: Serialized user data
         """
-        if 'role' in data:
-            role = data['role'].capitalize()
+        if "role" in data:
+            role = data["role"].capitalize()
             try:
                 group = Group.objects.get(name=role)
-                data['groups'] = [group]
+                data["groups"] = [group]
             except ObjectDoesNotExist as exc:
                 raise ValueError(f"Group with name {role} does not exist.") from exc
 
@@ -66,8 +70,8 @@ class DashUsersService:
         user = serializer.save()
 
         # Add the user to the group
-        if 'groups' in data:
-            user.groups.add(*data['groups'])
+        if "groups" in data:
+            user.groups.add(*data["groups"])
             user.save()
 
         return serializer.data

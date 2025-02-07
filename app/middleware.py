@@ -18,7 +18,9 @@ class DynamicRouteGuardMiddleware(MiddlewareMixin):
         """
         super().__init__(get_response)
         self.auth_service = AuthenticationService()
-        self.logger = LoggerService(name='DynamicRouteGuardMiddleware', log_file='middleware.log')
+        self.logger = LoggerService(
+            name="DynamicRouteGuardMiddleware", log_file="middleware.log"
+        )
         self.logger.get_logger().debug("DynamicRouteGuardMiddleware initialized")
 
     def __call__(self, request):
