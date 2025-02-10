@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
 from ..models.course_model import CourseModel
 from .lesson_serializer import LessonSerializer
+from .quiz_serializer import QuizSerializer
 from ..serializers.users.instructor_serializer import InstructorSerializer
 
 User = get_user_model()
@@ -19,6 +20,7 @@ class CourseSerializer(serializers.ModelSerializer):
     """
 
     lessons = LessonSerializer(many=True, read_only=True)
+    quizzes = QuizSerializer(many=True, read_only=True)
     instructor = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
@@ -27,7 +29,7 @@ class CourseSerializer(serializers.ModelSerializer):
         """
 
         model = CourseModel
-        fields = ["id", "title", "description", "instructor", "created_at", "lessons"]
+        fields = ["id", "title", "description", "instructor", "created_at", "lessons", "quizzes"]
 
     def validate_title(self, value):
         """
@@ -56,7 +58,7 @@ class CourseSerializer(serializers.ModelSerializer):
         serialized_data = InstructorSerializer(instance.instructor).data
         representation["instructor"] = serialized_data
 
-        lessons = representation.get("lessons", [])
-        sorted_lessons = sorted(lessons, key=lambda x: x["order"])
-        representation["lessons"] = sorted_lessons
+        # lessons = representation.get("lessons", [])
+        # sorted_lessons = sorted(lessons, key=lambda x: x["order"])
+        # representation["lessons"] = sorted_lessons
         return representation

@@ -17,7 +17,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         """
 
         model = AnswerModel
-        fields = ["id", "text", "is_correct"]
+        fields = ["id", "text", 'question', "is_correct"]
 
     def __str__(self):
         """

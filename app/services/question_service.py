@@ -47,13 +47,8 @@ class QuestionService:
         :param data: Dictionary containing question data.
         :return: Serialized question data.
         """
-        # Ensure the quiz exists
         quiz: QuizModel = get_object_or_404(QuizModel, id=quiz_id)
-
-        # Attach the quiz ID to the question data
         data["quiz"] = quiz.id
-
-        # Validate and save the question
         serializer: QuestionSerializer = QuestionSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

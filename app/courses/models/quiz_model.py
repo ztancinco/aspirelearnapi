@@ -4,10 +4,9 @@ This file contains the quiz model.
 
 from django.db import models
 from .course_model import CourseModel
-from ...abstract.soft_delete_model import SoftDeleteModel
 
 
-class QuizModel(SoftDeleteModel):
+class QuizModel(models.Model):
     """
     Model representing a quiz.
     """
@@ -18,7 +17,6 @@ class QuizModel(SoftDeleteModel):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         """
@@ -26,6 +24,3 @@ class QuizModel(SoftDeleteModel):
         """
 
         db_table = "quizzes"
-        indexes = [
-            models.Index(fields=["deleted_at"]),
-        ]

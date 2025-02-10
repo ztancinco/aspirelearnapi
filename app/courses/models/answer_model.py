@@ -3,7 +3,7 @@ Model for Answer.
 """
 
 from django.db import models
-from .question_model import QuestionModel  # Ensure this is correct
+from .question_model import QuestionModel
 
 
 class AnswerModel(models.Model):
@@ -17,9 +17,6 @@ class AnswerModel(models.Model):
     text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
     is_multiple_choice = models.BooleanField(default=False)
-    choice_correct_answer = models.CharField(
-        max_length=25, null=True, blank=True
-    )  # Allow null for non-multiple-choice answers
 
     class Meta:
         """
