@@ -29,16 +29,42 @@ class CourseSerializer(serializers.ModelSerializer):
         """
 
         model = CourseModel
-        fields = ["id", "title", "description", "instructor", "created_at", "lessons", "quizzes"]
+        fields = [
+            "id",
+            "title",
+            "description",
+            "instructor",
+            "created_at",
+            "lessons",
+            "quizzes",
+        ]
 
     def validate_title(self, value):
         """
-        Ensure that a course with the same title does not exist unless it's deleted.
+        Ensure that a course with the same title does not exist unless it's deleted,
+        and allow updates to the course itself (ignore the course being updated).
         """
-        if CourseModel.objects.filter(title=value, deleted_at__isnull=True).exists():
+        course_instance = getattr(self, "instance", None)
+
+        # Check if this is an update, and if so, ignore the current course instance
+        if course_instance:
+            existing_course = CourseModel.objects.filter(
+                title=value, deleted_at__isnull=True
+            ).exclude(
+                id=course_instance.id
+            )  # Exclude the current course instance
+        else:
+            # If it's a new course, no need to exclude anything
+            existing_course = CourseModel.objects.filter(
+                title=value, deleted_at__isnull=True
+            )
+
+        # If another course with the same title exists and is not deleted, raise an error
+        if existing_course.exists():
             raise serializers.ValidationError(
                 "A course with this title already exists."
             )
+
         return value
 
     @extend_schema(
@@ -58,7 +84,7 @@ class CourseSerializer(serializers.ModelSerializer):
         serialized_data = InstructorSerializer(instance.instructor).data
         representation["instructor"] = serialized_data
 
-        # lessons = representation.get("lessons", [])
-        # sorted_lessons = sorted(lessons, key=lambda x: x["order"])
-        # representation["lessons"] = sorted_lessons
+        lessons = representation.get("lessons", [])
+        sorted_lessons = sorted(lessons, key=lambda x: x["order"])
+        representation["lessons"] = sorted_lessons
         return representation

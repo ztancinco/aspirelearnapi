@@ -137,7 +137,11 @@ class CourseService:
         for quiz in quizzes:
             quiz_id = quiz.get("id")
             if quiz_id and quiz_id in existing_quizzes:
-                self.quiz_service.update_quiz(quiz_id, quiz)
+                updated_quiz = self.quiz_service.update_quiz(quiz_id, quiz)
+                for question_data in quiz.get("questions", []):
+                    self._create_or_update_question_and_answers(
+                        updated_quiz["id"], question_data
+                    )
             else:
                 quiz["course"] = course.id
                 created_quiz = self.quiz_service.create_quiz(quiz)
@@ -154,18 +158,30 @@ class CourseService:
         Create or update a question and its answers for a given quiz.
 
         :param quiz_id: The ID of the quiz where the question belongs.
-        :param question_data: The data for the question, including options and correct answer.
+        :param question_data: The data for the question, including answers.
         """
-        # Create or update the question
-        question_text = question_data.get("title")
-        if not question_text:
-            raise ValueError("Question title is missing.")
+        question_id = question_data.get("id")
 
-        question_data["text"] = question_text
-        created_question = self.question_service.create_question(quiz_id, question_data)
+        if question_id:
+            question = self.question_service.update_question(question_id, question_data)
+        else:
+            question = self.question_service.create_question(quiz_id, question_data)
 
-        # Create or update the answers for the question
-        self._create_or_update_answers(created_question["id"], question_data)
+        question_id = question["id"]
+
+        self.answer_service.delete_answers_by_question(question_id)
+
+        for answer in question_data.get("answers", []):
+            self.answer_service.create_answer(
+                question_id,
+                {
+                    "text": answer["text"],
+                    "is_correct": answer.get("is_correct", False),
+                    "is_multiple_choice": question_data.get(
+                        "is_multiple_choice", False
+                    ),
+                },
+            )
 
     def _create_or_update_answers(
         self, question_id: int, question_data: Dict[str, Any]
@@ -177,44 +193,48 @@ class CourseService:
         :param question_data: Data containing the options and correct answer.
         """
         existing_answers = {
-            answer.text: answer
+            str(answer.text): answer
             for answer in self.answer_service.get_answers_by_question(question_id)
         }
 
         # Handle answers based on whether it's a multiple-choice question
         if question_data.get("is_multiple_choice"):
-            options_data = question_data.get("options", [])
+            answers_data = [
+                answer["text"] for answer in question_data.get("answers", [])
+            ]  # Extract text from answer objects
             correct_answer = question_data.get("correct_answer")
 
             # Delete answers that no longer exist
-            for option in existing_answers.keys():
-                if option not in options_data:
+            for answer in existing_answers.keys():
+                if answer not in answers_data:
                     self.answer_service.delete_answer_by_question_and_text(
-                        question_id, option
+                        question_id, answer
                     )
 
             # Add new answers or update existing ones
-            for option in options_data:
-                is_correct = option == correct_answer
-                if option not in existing_answers:
+            for answer in answers_data:
+                is_correct = answer == correct_answer
+                if answer not in existing_answers:
                     self.answer_service.create_answer(
                         question_id,
                         {
-                            "text": option,
+                            "text": answer,
                             "is_correct": is_correct,
                             "is_multiple_choice": True,
                         },
                     )
                 else:
-                    answer = existing_answers[option]
-                    if answer.is_correct != is_correct:
-                        answer.is_correct = is_correct
-                        answer.save()
+                    answer_obj = existing_answers[answer]
+                    if answer_obj.is_correct != is_correct:
+                        answer_obj.is_correct = is_correct
+                        answer_obj.save()
 
         else:
             # For non-multiple-choice questions, handle the single answer
             correct_answer = question_data.get("correct_answer")
-            existing_answer = existing_answers.get(correct_answer)
+            existing_answer = existing_answers.get(
+                str(correct_answer)
+            )  # Ensure the key is a string
 
             if existing_answer:
                 # Update if necessary

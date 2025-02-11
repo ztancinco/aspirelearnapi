@@ -20,7 +20,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         """
 
         model = QuestionModel
-        fields = ["id", "text", "quiz", "answers"]
+        fields = ["id", "text", "quiz", "is_multiple_choice", "answers"]
 
     def __str__(self):
         """

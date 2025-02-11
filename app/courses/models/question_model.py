@@ -11,8 +11,11 @@ class QuestionModel(models.Model):
     A model representing a question related to the Quiz in the application.
     """
 
-    quiz = models.ForeignKey(QuizModel, on_delete=models.CASCADE, related_name="questions")
+    quiz = models.ForeignKey(
+        QuizModel, on_delete=models.CASCADE, related_name="questions"
+    )
     text = models.TextField()
+    is_multiple_choice = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

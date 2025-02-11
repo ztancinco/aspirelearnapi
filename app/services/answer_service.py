@@ -124,3 +124,16 @@ class AnswerService:
             raise ValueError(
                 f"Answer with text '{answer_text}' not found for question {question_id}."
             )
+
+    def delete_answers_by_question(self, question_id: int) -> None:
+        """
+        Delete all answers for a given question.
+
+        :param question_id: ID of the question whose answers should be deleted.
+        """
+        deleted_count, _ = AnswerModel.objects.filter(  # pylint: disable=no-member
+            question_id=question_id
+        ).delete()  # pylint: disable=no-member
+
+        if deleted_count == 0:
+            raise ValueError(f"No answers found for question {question_id}.")
