@@ -77,3 +77,16 @@ class LessonService:
         lessons = LessonModel.objects.all()  # pylint: disable=no-member
         serializer = LessonSerializer(lessons, many=True)
         return serializer.data
+
+    def get_lessons_by_course_id(self, course_id: int) -> Dict[str, Any]:
+        """
+        Retrieve lessons for a specific course by course_id.
+
+        :param course_id: ID of the course to fetch lessons for.
+        :return: List of serialized lesson data.
+        """
+        lessons = LessonModel.objects.filter(  # pylint: disable=no-member
+            course_id=course_id
+        )
+        serializer = LessonSerializer(lessons, many=True)
+        return serializer.data

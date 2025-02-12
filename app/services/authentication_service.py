@@ -51,12 +51,10 @@ class AuthenticationService:
             def extract_routes(patterns: List, parent_pattern: str = "") -> None:
                 for pattern in patterns:
                     if hasattr(pattern, "url_patterns"):
-                        # Recursive call for nested URL patterns
                         extract_routes(
                             pattern.url_patterns, parent_pattern + str(pattern.pattern)
                         )
                     else:
-                        # Append full pattern to the routes list
                         routes.append(parent_pattern + str(pattern.pattern))
 
             extract_routes(url_patterns)

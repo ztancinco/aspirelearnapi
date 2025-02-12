@@ -112,8 +112,6 @@ class AnswerService:
         :param answer_text: The text of the answer to delete.
         :return: None
         """
-        # Ensure the answer_text variable is passed when calling this method
-        # Filter answers by the question and the text
         answer = AnswerModel.objects.filter(  # pylint: disable=no-member
             question_id=question_id, text=answer_text
         ).first()

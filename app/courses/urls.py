@@ -6,6 +6,7 @@ from django.urls import path
 from ..courses.views.courses_view import CoursesView
 from ..courses.views.quizzes_view import QuizzesView
 from ..courses.views.questions_view import QuestionsView
+from ..courses.views.lessons_view import LessonsView
 
 urlpatterns = [
     path("", CoursesView.as_view(), name="courses-list"),
@@ -20,5 +21,15 @@ urlpatterns = [
         "quizzes/<int:quiz_id>/questions/<int:question_id>/",
         QuestionsView.as_view(),
         name="question-detail",
+    ),
+    path(
+        "<int:course_id>/lessons/",
+        LessonsView.as_view(),
+        name="lessons-list",
+    ),
+    path(
+        "<int:course_id>/lessons/<int:lesson_id>/",
+        LessonsView.as_view(),
+        name="lesson-detail",
     ),
 ]

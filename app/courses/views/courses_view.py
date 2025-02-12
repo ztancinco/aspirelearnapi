@@ -11,12 +11,13 @@ from rest_framework import status
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from ...services.course_service import CourseService
+from ...services.lesson_service import LessonService
 from ..serializers.course_serializer import CourseSerializer
 
 
 class CoursesView(APIView):
     """
-    View for managing courses using CoursesService.
+    View for managing courses and lessons using CoursesService.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -25,6 +26,7 @@ class CoursesView(APIView):
         """
         super().__init__(*args, **kwargs)
         self.course_service: CourseService = CourseService()
+        self.lesson_service: LessonService = LessonService()
 
     @extend_schema(
         responses={200: CourseSerializer(many=True)},
